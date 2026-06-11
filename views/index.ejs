@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>糖分密碼 Sugar Code</title>
+    <style>
+        body { background: #FFFFFF; font-family: STHeiti, sans-serif; margin: 0; padding-top: 80px; text-align: center; color: #111; }
+        
+        /* 全站一致頂部精品導覽列 */
+        .navbar { position: fixed; top: 0; left: 0; width: 100%; background: #FFF; border-bottom: 1px solid #EAEAEA; display: flex; justify-content: space-between; align-items: center; padding: 15px 60px; box-sizing: border-box; z-index: 1000; }
+        .logo { font-size: 1.4rem; font-weight: bold; letter-spacing: 4px; color: #111; text-decoration: none; }
+        .nav-links { display: flex; gap: 35px; list-style: none; margin: 0; padding: 0; align-items: center; }
+        .nav-links > li { position: relative; }
+        .nav-links a { color: #111; text-decoration: none; font-size: 0.9rem; letter-spacing: 2px; padding: 10px 0; display: block; }
+        
+        /* 下拉選單基礎 CSS (地圖與會員選單共用) */
+        .dropdown { position: absolute; top: 100%; left: 50%; transform: translateX(-50%); background: #FFFFFF; border: 1px solid #EAEAEA; min-width: 180px; display: none; box-shadow: 0 10px 30px rgba(0,0,0,0.05); padding: 5px 0; list-style: none; margin: 0; }
+        .dropdown li a { padding: 10px 20px; text-align: center; font-size: 0.85rem; }
+        .dropdown li a:hover { background: #FAFAFA; color: #C5A880; }
+        .nav-links > li:hover .dropdown { display: block; }
+        
+        /* 【修改點 3】高對比購物車紅點通知標籤 CSS */
+        .cart-link { position: relative; }
+        .badge { position: absolute; top: -2px; right: -15px; background: #FF4D4D; color: white; font-size: 0.7rem; font-family: Arial, sans-serif; font-weight: bold; border-radius: 50%; width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(255,77,77,0.4); }
+        
+        /* 尊榮輪播圖與手動點點控制器 */
+        .slider-container { width: 100%; height: 500px; overflow: hidden; position: relative; }
+        .slider-track { display: flex; width: 300%; height: 100%; transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1); }
+        .slide { width: 33.3333%; height: 100%; position: relative; }
+        .slide img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.8); }
+        .slide-info { position: absolute; bottom: 50px; left: 60px; text-align: left; color: white; background: rgba(0,0,0,0.6); padding: 25px; border-left: 3px solid #C5A880; }
+        
+        .dots-container { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; gap: 12px; z-index: 10; }
+        .dot { width: 12px; height: 12px; background: rgba(255,255,255,0.4); border-radius: 50%; cursor: pointer; transition: 0.3s; }
+        .dot.active { background: #C5A880; width: 28px; border-radius: 6px; }
+
+        .story-section { max-width: 1300px; margin: 80px auto; display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center; padding: 0 20px; text-align: left; }
+        .story-text h4 { font-size: 1.6rem; letter-spacing: 3px; color: #C5A880; margin: 0 0 20px 0; }
+        .story-text p { line-height: 2; color: #555; font-size: 0.95rem; }
+        .story-img img { width: 100%; height: 350px; object-fit: cover; }
+
+        .premium-footer { background: #2A2A2A; color: #CCCCCC; text-align: left; padding: 50px 80px 30px 80px; margin-top: 100px; font-size: 0.9rem; border-top: 3px solid #C5A880; }
+        .footer-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 40px; }
+        .footer-col h5 { color: #FFFFFF; font-size: 1.1rem; margin-bottom: 20px; font-weight: normal; }
+        .footer-col p { margin: 8px 0; font-weight: 300; }
+        
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="/" class="logo">SUGAR <span style="color:#C5A880;">CODE</span></a>
+        <ul class="nav-links">
+            <li><a href="/shop">全商品列表區</a></li>
+            <li><a href="/customize">智慧客製化專區</a></li>
+            <li>
+                <a href="/map">智慧地圖</a>
+                <ul class="dropdown">
+                    <li><a href="/map?area=三民區">高雄精品總店 (三民區)</a></li>
+                    <li><a href="/map?area=燕巢區">燕巢奢華分店 (燕巢區)</a></li>
+                </ul>
+            </li>
+            <li><a href="/queue">雲端取號</a></li>
+            <li>
+                <a href="/cart" class="cart-link">
+                    我的購物車
+                    <% if (typeof cartCount !== 'undefined' && cartCount > 0) { %>
+                        <span class="badge"><%= cartCount %></span>
+                    <% } %>
+                </a>
+            </li>
+            <li>
+                <a href="#">會員中心</a>
+                <ul class="dropdown">
+                    <% if (customer) { %>
+                        <li><a href="/profile">我的帳戶</a></li>
+                        <li><a href="/orders">訂單查詢</a></li>
+                        <li><a href="/logout" style="color:#FF4D4D;">登出系統</a></li>
+                    <% } else { %>
+                        <li><a href="/login">登入會員</a></li>
+                        <li><a href="/register">註冊會員</a></li>
+                    <% } %>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+
+    <div class="slider-container">
+        <div class="slider-track" id="sliderTrack">
+            <div class="slide">
+                <img src="https://images.unsplash.com/photo-1551024601-bec78aea704b?w=1600" alt="經典法式千層蛋糕">
+                <div class="slide-info"><h2>經典法式千層蛋糕</h2><p>細緻層次，金黃濃郁</p></div>
+            </div>
+            <div class="slide">
+                <img src="https://images.unsplash.com/photo-1519869325930-281384150729?w=1600" alt="青檸塔">
+                <div class="slide-info"><h2>法式極品青檸塔</h2><p>酸甜適中，盛夏首選</p></div>
+            </div>
+            <div class="slide">
+                <img src="https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=1600" alt="巧克力慕斯">
+                <div class="slide-info"><h2>曜石黑金巧克力慕斯</h2><p>頂級工藝，奢華口感</p></div>
+            </div>
+        </div>
+        <div class="dots-container" id="dotsContainer">
+            <div class="dot active" onclick="moveToSlide(0)"></div>
+            <div class="dot" onclick="moveToSlide(1)"></div>
+            <div class="dot" onclick="moveToSlide(2)"></div>
+        </div>
+    </div>
+
+    <div class="story-section">
+        <div class="story-text">
+            <h4>頂級原物料工藝</h4>
+            <p>嚴選法國諾曼第發酵奶油與日本進口細緻小麥粉。結合多重智慧糖分配比調控，確保每一款甜點都能滿足現代人對健康與精緻美味的極致追求。</p>
+        </div>
+        <div class="story-img">
+            <img src="/gpt.png" alt="甜點製程">
+        </div>
+    </div>
+
+    <footer class="premium-footer">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h5>SUGAR CODE 糖分密碼</h5>
+                <p>結合遠端取號與多重客製化配置之甜點智慧零售系統</p>
+                <p style="color:#666; font-size:0.8rem; margin-top:20px;">© 2026 糖分密碼專題組. All Rights Reserved.</p>
+            </div>
+            <div class="footer-col">
+                <h5>精品據點</h5>
+                <p>📍 高雄精品總店：高雄市三民區建工路高級商圈</p>
+                <p>📞 貴賓尊榮專線：(07) 381-4526</p>
+            </div>
+            <div class="footer-col">
+                <h5>營業時間</h5>
+                <p>🕒 週一 至 週五：11:00 – 21:30</p>
+                <p style="color:#C5A880;">✨ 提早使用系統進行雲端取號，享受免排隊體驗。</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const track = document.getElementById('sliderTrack');
+        const dots = document.querySelectorAll('.dot');
+        let index = 0;
+        let timer = setInterval(autoPlay, 4000);
+
+        function updateSlider() {
+            track.style.transform = `translateX(-${index * 33.3333}%)`;
+            dots.forEach(d => d.classList.remove('active'));
+            dots[index].classList.add('active');
+        }
+
+        function autoPlay() {
+            index = (index + 1) % 3;
+            updateSlider();
+        }
+
+        function moveToSlide(n) {
+            clearInterval(timer);
+            index = n;
+            updateSlider();
+            timer = setInterval(autoPlay, 4000);
+        }
+    </script>
+</body>
+</html>

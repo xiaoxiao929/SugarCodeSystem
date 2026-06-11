@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>加入會員 - SUGAR CODE</title>
+    <style>
+        body { background: #FAFAFA; font-family: STHeiti, sans-serif; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .box { background: #FFFFFF; width: 450px; padding: 40px; box-shadow: 0 15px 50px rgba(0,0,0,0.05); border: 1px solid #EAEAEA; }
+        .title { font-size: 1.4rem; letter-spacing: 2px; font-weight: bold; border-bottom: 2px solid #C5A880; padding-bottom: 10px; margin-bottom: 30px; text-align: left; }
+        .form-group { margin-bottom: 18px; text-align: left; }
+        label { font-size: 0.85rem; color: #666; display: block; margin-bottom: 6px; }
+        input { width: 100%; padding: 12px; border: 1px solid #E0E0E0; background: #FAFAFA; box-sizing: border-box; }
+        .btn { width: 100%; background: #C5A880; color: black; border: none; padding: 14px; cursor: pointer; letter-spacing: 2px; font-weight: bold; }
+        .btn:hover { background: #111; color: white; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <div class="title">建立尊榮會員帳號</div>
+        <form action="/register/submit" method="POST">
+            <div class="form-group"><label>設定會員登入帳號</label><input type="text" name="username" required placeholder="請輸入英數字組合"></div>
+            <div class="form-group"><label>設定認證密碼</label><input type="password" name="password" required placeholder="請輸入密碼"></div>
+            <div class="form-group"><label>您的稱呼/真實別名</label><input type="text" name="nickname" required placeholder="如：昭巧"></div>
+            <div class="form-group"><label>行動電話聯絡號碼</label><input type="text" name="phone" required placeholder="用於取號通知簡訊"></div>
+            <button type="submit" class="btn">確認送出並完成註冊</button>
+        </form>
+        <div style="text-align:center; margin-top:20px;"><a href="/login" style="font-size:0.85rem; color:#999; text-decoration:none;">⬅ 已有帳號？返回登入</a></div>
+    </div>
+</body>
+</html>

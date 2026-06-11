@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>【後台】糖分密碼智慧營運控制中心</title>
+    <style>
+        body { background: #111111; color: #FFFFFF; font-family: STHeiti, sans-serif; margin: 0; padding: 40px; }
+        .admin-box { max-width: 1200px; margin: 0 auto; background: #1A1A1A; border: 1px solid #333; padding: 40px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
+        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #C5A880; padding-bottom: 20px; margin-bottom: 30px; }
+        .kpi-card { background: linear-gradient(135deg, #C5A880, #A38458); padding: 20px; font-size: 1.3rem; font-weight: bold; color: black; display: inline-block; margin-bottom: 30px; letter-spacing: 1px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 40px; }
+        .section { background: #222; border: 1px solid #333; padding: 25px; }
+        h3 { margin-top: 0; color: #C5A880; letter-spacing: 1px; font-weight: 300; border-bottom: 1px solid #333; padding-bottom: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; color: #DDD; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #333; font-size: 0.9rem; }
+        th { background: #2A2A2A; color: #C5A880; }
+        input, select { background: #222; border: 1px solid #444; padding: 10px; color: white; width: 100%; box-sizing: border-box; margin-bottom: 15px; }
+        .btn { background: #C5A880; color: black; border: none; padding: 10px 20px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .btn:hover { background: white; }
+        .btn-danger { background: #FF4D4D; color: white; border: none; padding: 5px 10px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <% if (typeof newNotificationCount !== 'undefined' && newNotificationCount > 0) { %>
+        <script>
+            alert("🔔 營運即時通知：\n\n報告管理者！系統剛剛偵測到有 [ <%= newNotificationCount %> 筆 ] 全新的顧客客製化訂單已送達！\n請立刻往下滑動至流水帳清單，點選排程製作！");
+        </script>
+    <% } %>
+
+    <div class="admin-box">
+        <div class="header">
+            <h2 style="margin: 0; font-weight: 300; letter-spacing: 3px;">📊 SUGAR CODE 智慧雙層營運管理後台 (獨立安全站點)</h2>
+            <span style="color: #888; font-size: 0.85rem;">權限等級：超級管理員 (Super Admin)</span>
+        </div>
+
+        <div class="kpi-card">
+            📈 智慧決策看板：平台累計總營收額：$<%= totalRevenue %> NTD
+        </div>
+
+        <div class="grid">
+            <div class="section">
+                <h3>🔊 門市實體叫號同步控制</h3>
+                <% queues.forEach(q => { %>
+                    <div style="background: #2A2A2A; padding: 15px; margin-bottom: 15px; border-left: 4px solid #C5A880;">
+                        <strong style="font-size: 1.05rem;"><%= q.name %></strong><br>
+                        <p style="margin: 8px 0; font-size: 0.9rem; color: #AAA;">
+                            當前叫號進度：<span style="color:#C5A880; font-weight:bold; font-size: 1.2rem;"><%= q.current_number %></span> 號 / 總發號牌數：<%= q.last_number %> 號
+                        </p>
+                        <form action="/admin/queue/next" method="POST">
+                            <input type="hidden" name="shopId" value="<%= q.shop_id %>">
+                            <button type="submit" class="btn" style="width: 100%;">呼叫下一號顧客 (Update 資料庫)</button>
+                        </form>
+                    </div>
+                <% }) %>
+            </div>
+
+            <div class="section">
+                <h3>🍰 精品甜點上架管理 (CRUD - Create)</h3>
+                <form action="/admin/dessert/add" method="POST">
+                    <input type="text" name="name" required placeholder="甜點商品名稱">
+                    <input type="number" name="price" required placeholder="商品定價 (NTD)">
+                    <input type="number" name="stock" required placeholder="初始現貨庫存供給量">
+                    <select name="category">
+                        <option value="千層蛋糕">千層蛋糕系列</option>
+                        <option value="手工塔類">法國手工塔類</option>
+                        <option value="奢華蛋糕">奢華慕斯蛋糕</option>
+                    </select>
+                    <input type="text" name="img_url" placeholder="高畫質圖片網址 (不填將自動套用經典圖)">
+                    <button type="submit" class="btn" style="width: 100%; background: white;">確認商品上架</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="section" style="margin-bottom: 40px;">
+            <h3>📦 門市庫存現貨變更清單 (CRUD - Read & Delete)</h3>
+            <table style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th>商品 ID</th>
+                        <th>品項大圖</th>
+                        <th>商品名稱</th>
+                        <th>分類</th>
+                        <th>目前庫存</th>
+                        <th>單價</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% desserts.forEach(d => { %>
+                        <tr>
+                            <td>#<%= d.id %></td>
+                            <td><img src="<%= d.img_url %>" style="width: 50px; height: 50px; object-fit: cover;"></td>
+                            <td><strong><%= d.name %></strong></td>
+                            <td><%= d.category %></td>
+                            <td><%= d.stock %> 個</td>
+                            <td style="color:#C5A880;">$<%= d.price %></td>
+                            <td>
+                                <form action="/admin/dessert/delete/<%= d.id %>" method="POST" style="margin: 0;">
+                                    <button type="submit" class="btn-danger">安全下架 (Delete)</button>
+                                </form>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h3>🛒 顧客全通路訂單明細紀錄</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>訂單編號</th>
+                        <th>顧客別名</th>
+                        <th>訂購精品項目</th>
+                        <th>智慧糖分客製</th>
+                        <th>加購奢華配件</th>
+                        <th>表面專屬刻字內文</th>
+                        <th>目前狀態進度</th>
+                        <th>變更狀態操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% orders.forEach(o => { %>
+                        <tr>
+                            <td>#<%= o.id %></td>
+                            <td><mark style="background:#C5A880; color:black; padding: 2px 6px;"><%= o.username %></mark></td>
+                            <td><strong><%= o.dessert_name %></strong></td>
+                            <td><%= o.sugar_level %></td>
+                            <td><%= o.candle %></td>
+                            <td style="color: #C5A880; font-style: italic;"><%= o.custom_text %></td>
+                            
+                            <td style="color:#10B981; font-weight:bold;"><%= o.status || '排單製作中' %></td>
+                            
+                            <td>
+                                <form action="/admin/order/update_status" method="POST" style="margin:0; display:flex; gap:8px;">
+                                    <input type="hidden" name="orderId" value="<%= o.id %>">
+                                    <select name="nextStatus" style="padding:4px; margin:0; width:150px; font-size:0.8rem;">
+                                        <option value="排單製作中" <%= o.status === '排單製作中' ? 'selected' : '' %>>排單製作中</option>
+                                        <option value="主廚精緻烘焙中" <%= o.status === '主廚精緻烘焙中' ? 'selected' : '' %>>主廚精緻烘焙中</option>
+                                        <option value="精品包裝完成，等待取貨" <%= o.status === '精品包裝完成，等待取貨' ? 'selected' : '' %>>精品包裝完成，等待取貨</option>
+                                        <option value="尊榮交易完成" <%= o.status === '尊榮交易完成' ? 'selected' : '' %>>尊榮交易完成</option>
+                                    </select>
+                                    <button type="submit" class="btn" style="padding:4px 8px; font-size:0.8rem;">同步</button>
+                                </form>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

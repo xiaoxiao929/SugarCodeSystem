@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>訂單查詢 - SUGAR CODE</title>
+    <style>
+        body { background: #FFFFFF; font-family: STHeiti, sans-serif; margin: 0; padding-top: 100px; }
+        .navbar { position: fixed; top: 0; left: 0; width: 100%; background: white; border-bottom: 1px solid #EAEAEA; display: flex; justify-content: space-between; align-items: center; padding: 15px 60px; box-sizing: border-box; }
+        .container { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 14px; border-bottom: 1px solid #EAEAEA; text-align: left; }
+        th { background: #FAFAFA; color:#C5A880; }
+        .status-badge { background:#F0FDF4; color:#10B981; padding:4px 10px; font-size:0.85rem; border:1px solid #10B981; font-weight:bold; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="/" style="font-size:1.4rem; font-weight:bold; color:#111; text-decoration:none;">SUGAR <span style="color:#C5A880;">CODE</span></a>
+        <div><a href="/" style="color:#111; text-decoration:none; font-weight:bold;">返回首頁</a></div>
+    </nav>
+
+    <div class="container">
+        <h3 style="border-left: 4px solid #C5A880; padding-left:15px; font-weight:300; letter-spacing:1px;">📜 您的歷史尊榮訂購紀錄</h3>
+        <table>
+            <thead>
+                <tr><th>訂單號碼</th><th>甜點品項</th><th>客製化規格詳情</th><th>實付總額</th><th>成立時間</th><th>目前處理進度</th></tr>
+            </thead>
+            <tbody>
+                <% orders.forEach(o => { %>
+                    <tr>
+                        <td>#20260<%= o.id %></td>
+                        <td><strong><%= o.dessert_name %></strong></td>
+                        <td>糖分: <%= o.sugar_level %> | 配件: <%= o.candle %> | 刻字: <%= o.custom_text %></td>
+                        <td style="color:#C5A880; font-weight:bold;">$<%= o.total_price %> NTD</td>
+                        <td style="font-size:0.85rem; color:#666;"><%= o.order_time %></td>
+                        <td><span class="status-badge"><%= o.status %></span></td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

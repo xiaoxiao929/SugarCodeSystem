@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>全商品列表區 - SUGAR CODE</title>
+    <style>
+        body { background: #FFFFFF; font-family: STHeiti, sans-serif; margin: 0; padding-top: 100px; text-align: center; }
+        .navbar { position: fixed; top: 0; left: 0; width: 100%; background: #FFF; border-bottom: 1px solid #EAEAEA; display: flex; justify-content: space-between; align-items: center; padding: 15px 60px; box-sizing: border-box; z-index: 1000; }
+        .logo { font-size: 1.4rem; font-weight: bold; letter-spacing: 4px; color: #111; text-decoration: none; }
+        .nav-links { display: flex; gap: 35px; list-style: none; margin: 0; padding: 0; align-items: center; }
+        .nav-links > li { position: relative; }
+        .nav-links a { color: #111; text-decoration: none; font-size: 0.9rem; letter-spacing: 2px; padding: 10px 0; display: block; }
+        .dropdown { position: absolute; top: 100%; left: 50%; transform: translateX(-50%); background: #FFFFFF; border: 1px solid #EAEAEA; min-width: 180px; display: none; box-shadow: 0 10px 30px rgba(0,0,0,0.05); padding: 5px 0; list-style: none; margin: 0; }
+        .dropdown li a { padding: 10px 20px; text-align: center; font-size: 0.85rem; }
+        .dropdown li a:hover { background: #FAFAFA; color: #C5A880; }
+        .nav-links > li:hover .dropdown { display: block; }
+        
+        .cart-link { position: relative; }
+        .badge { position: absolute; top: -2px; right: -15px; background: #FF4D4D; color: white; font-size: 0.7rem; font-family: Arial, sans-serif; font-weight: bold; border-radius: 50%; width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(255,77,77,0.4); }
+
+        .product-grid { max-width: 1200px; margin: 40px auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; padding: 0 20px; }
+        .product-card { border: 1px solid #EAEAEA; background: #FFFFFF; padding: 15px; text-align: left; display: flex; flex-direction: column; }
+        .product-card img { width: 100%; height: 220px; object-fit: cover; margin-bottom: 15px; }
+        .cart-btn { background: #111; color: white; border: none; padding: 10px; width: 100%; cursor: pointer; transition: 0.3s; }
+        .cart-btn:hover { background: #C5A880; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="/" class="logo">SUGAR <span style="color:#C5A880;">CODE</span></a>
+        <ul class="nav-links">
+            <li><a href="/shop" style="color:#C5A880;">全商品列表區</a></li>
+            <li><a href="/customize">智慧客製化專區</a></li>
+            <li>
+                <a href="/map">智慧地圖</a>
+                <ul class="dropdown">
+                    <li><a href="/map?area=三民區">高雄精品總店 (三民區)</a></li>
+                    <li><a href="/map?area=燕巢區">燕巢奢華分店 (燕巢區)</a></li>
+                </ul>
+            </li>
+            <li><a href="/queue">雲端取號</a></li>
+            <li>
+                <a href="/cart" class="cart-link">
+                    我的購物車
+                    <% if (typeof cartCount !== 'undefined' && cartCount > 0) { %>
+                        <span class="badge"><%= cartCount %></span>
+                    <% } %>
+                </a>
+            </li>
+            <li>
+                <a href="#">會員中心</a>
+                <ul class="dropdown">
+                    <% if (customer) { %>
+                        <li><a href="/profile">我的帳戶</a></li>
+                        <li><a href="/orders">訂單查詢</a></li>
+                        <li><a href="/logout" style="color:#FF4D4D;">登出系統</a></li>
+                    <% } else { %>
+                        <li><a href="/login">登入會員</a></li>
+                        <li><a href="/register">註冊會員</a></li>
+                    <% } %>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+
+    <h2 style="letter-spacing: 3px; font-weight: 300;">🍰 店內現貨品項</h2>
+    <div class="product-grid">
+        <% desserts.forEach(item => { %>
+            <div class="product-card">
+                <img src="<%= item.img_url %>" alt="商品">
+                <div style="font-weight:bold; font-size:1.1rem;"><%= item.name %></div>
+                <div style="color:#888; font-size:0.8rem; margin: 5px 0;"><%= item.category %></div>
+                <div style="color:#C5A880; font-size:1.2rem; font-weight:bold; margin-bottom:15px;">NT$ <%= item.price %></div>
+                <form action="/cart/add" method="POST" style="margin-top:auto;">
+                    <input type="hidden" name="name" value="<%= item.name %>">
+                    <input type="hidden" name="price" value="<%= item.price %>">
+                    <button type="submit" class="cart-btn">🛒 加入購物車</button>
+                </form>
+            </div>
+        <% }) %>
+    </div>
+</body>
+</html>

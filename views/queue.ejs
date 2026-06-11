@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>雲端取號 - SUGAR CODE</title>
+    <style>
+        body { background: #FFFFFF; font-family: 'Times New Roman', STHeiti, sans-serif; margin: 0; padding-top: 100px; text-align: center; }
+        .queue-box { max-width: 500px; margin: 40px auto; border: 1px solid #EAEAEA; padding: 40px; background: white; }
+        .number-display { font-size: 5rem; color: #111; font-weight: bold; margin: 20px 0; font-family: serif; }
+        select { padding: 10px; width: 80%; border: 1px solid #C5A880; background: white; margin-bottom: 25px; }
+        .btn-black { background: #111; color: white; border: none; padding: 14px 40px; font-size: 1rem; letter-spacing: 2px; cursor: pointer; }
+        .btn-black:hover { background: #C5A880; }
+        .home-btn { display: inline-block; margin-top: 30px; background: #FAFAFA; border: 1px solid #DDD; color: #555; padding: 10px 25px; text-decoration: none; font-size: 0.9rem; letter-spacing: 1px; transition: 0.3s; }
+        .home-btn:hover { background: #111; color: white; border-color: #111; }
+        .navbar { position: fixed; top: 0; left: 0; width: 100%; background: white; border-bottom: 1px solid #EAEAEA; display: flex; justify-content: space-between; align-items: center; padding: 15px 60px; box-sizing: border-box; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="/" style="font-size: 1.4rem; font-weight: bold; letter-spacing: 4px; color: #111; text-decoration: none;">SUGAR <span style="color:#C5A880;">CODE</span></a>
+        <div style="display: flex; gap: 35px;"><a href="/shop" style="color:#111; text-decoration:none; font-size:0.9rem;">精品商城</a></div>
+    </nav>
+
+    <div class="queue-box">
+        <h2 style="font-weight: 300; letter-spacing: 2px;">🎫 雲端智慧排隊取號</h2>
+        <hr style="border: 0; border-top: 1px solid #EAEAEA; margin: 20px 0;">
+
+        <form action="/queue" method="GET">
+            <select name="shopId" onchange="this.form.submit()">
+                <% shops.forEach(s => { %>
+                    <option value="<%= s.id %>" <%= queue.shop_id == s.id ? 'selected' : '' %>><%= s.name %></option>
+                <% }) %>
+            </select>
+        </form>
+
+        <p style="color:#666;">該門市現場叫號至</p>
+        <div class="number-display"><%= queue.current_number %></div>
+
+        <% if (myNumber) { %>
+            <div style="background: #FAFAFA; border: 1px dashed #C5A880; padding: 25px; margin-top: 30px;">
+                <h4 style="margin: 0; color: #C5A880;">您的專屬電子號碼牌</h4>
+                <div style="font-size: 2.5rem; font-weight: bold; margin: 10px 0;"><%= myNumber %> 號</div>
+                <p style="font-size: 0.95rem;">💡 估計候位時間：<span style="color:#FF4D4D; font-weight:bold;"><%= (myNumber - queue.current_number) * 5 %> 分鐘</span></p>
+            </div>
+        <% } else { %>
+            <form action="/queue/draw" method="POST">
+                <input type="hidden" name="shopId" value="<%= queue.shop_id %>">
+                <button type="submit" class="btn-black">遠端抽取電子號碼牌</button>
+            </form>
+        <% } %>
+
+        <a href="/" class="home-btn">⬅ 返回品牌首頁繼續瀏覽</a>
+    </div>
+</body>
+</html>

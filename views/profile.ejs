@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>我的帳戶 - SUGAR CODE</title>
+    <style>
+        body { background: #FAFAFA; font-family: STHeiti, sans-serif; margin: 0; padding-top: 100px; display: flex; justify-content: center; }
+        .profile-card { background: #FFF; width: 500px; padding: 40px; border: 1px solid #EAEAEA; box-shadow: 0 10px 30px rgba(0,0,0,0.02); margin-top: 40px; text-align: left; }
+        .info-item { margin-bottom: 20px; border-bottom: 1px solid #FAFAFA; padding-bottom: 10px; }
+        .label { font-size: 0.85rem; color: #888; }
+        .val { font-size: 1.1rem; font-weight: bold; margin-top: 5px; color:#111; }
+    </style>
+</head>
+<body>
+    <div class="profile-card">
+        <h2 style="font-weight:300; border-bottom:1px solid #EAEAEA; padding-bottom:15px; margin-top:0;">👤 尊榮會員個人帳戶資料</h2>
+        <div class="info-item"><div class="label">工作登入帳號</div><div class="val"><%= customer.username %></div></div>
+        <div class="info-item"><div class="label">會員專屬暱稱</div><div class="val" style="color:#C5A880;"><%= customer.nickname %> 貴賓</div></div>
+        <div class="info-item"><div class="label">註冊綁定手機號碼</div><div class="val"><%= customer.phone %></div></div>
+        <div style="text-align:center; margin-top:30px;"><a href="/" style="color:#999; text-decoration:none; font-size:0.9rem;">⬅ 返回系統首頁</a></div>
+    </div>
+</body>
+</html>

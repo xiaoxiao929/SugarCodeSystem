@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>智慧美食地圖 - 糖分密碼</title>
+    <style>
+        body { background: #FFFFFF; font-family: 'Times New Roman', STHeiti, sans-serif; margin: 0; padding-top: 100px; text-align: center; }
+        .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+        .filter-bar { margin-bottom: 35px; padding: 20px; background: #FAFAFA; border: 1px solid #EAEAEA; letter-spacing: 1px; }
+        select { padding: 10px 25px; border: 1px solid #C5A880; font-size: 0.9rem; background: white; outline: none; }
+        .shop-card { background: white; border: 1px solid #EAEAEA; padding: 25px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; text-align: left; }
+        .status-badge { padding: 4px 12px; font-size: 0.8rem; letter-spacing: 1px; text-transform: uppercase; font-weight: bold; }
+        .status-busy { background: #FFF0F0; color: #FF4D4D; border: 1px solid #FF4D4D; }
+        .status-ok { background: #F0FDF4; color: #10B981; border: 1px solid #10B981; }
+        .gold-link { background: #111; color: white; text-decoration: none; padding: 10px 20px; font-size: 0.85rem; letter-spacing: 1px; transition: 0.3s; }
+        .gold-link:hover { background: #C5A880; }
+        /* 沿用首頁 Navbar 樣式 */
+        .navbar { position: fixed; top: 0; left: 0; width: 100%; background: white; border-bottom: 1px solid #EAEAEA; display: flex; justify-content: space-between; align-items: center; padding: 15px 60px; box-sizing: border-box; z-index: 1000; }
+        .logo { font-size: 1.4rem; font-weight: bold; letter-spacing: 4px; color: #111; text-decoration: none; }
+        .nav-links { display: flex; gap: 35px; list-style: none; margin: 0; padding: 0; }
+        .nav-links a { color: #111; text-decoration: none; font-size: 0.9rem; letter-spacing: 2px; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="/" class="logo">SUGAR <span style="color:#C5A880;">CODE</span></a>
+        <ul class="nav-links">
+            <li><a href="/shop">精品商城</a></li>
+            <li><a href="/map" style="color:#C5A880;">智慧地圖</a></li>
+            <li><a href="/queue">雲端取號</a></li>
+            <li><a href="/login">會員中心</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <h2 style="letter-spacing: 3px; font-weight: 300;">📍 GPS 智慧門市導航地圖</h2>
+        <p style="color: #666; font-size: 0.9rem; letter-spacing: 1px;">即時聯動各分店現場候位時間與營業狀況</p>
+        
+        <div class="filter-bar">
+            <form action="/map" method="GET">
+                <label style="color:#555;">選擇您所在的區域進行高精度篩選：</label>
+                <select name="area" onchange="this.form.submit()">
+                    <option value="">探索全高雄所有精品據點</option>
+                    <option value="三民區" <%= currentArea === '三民區' ? 'selected' : '' %>>三民區 (精品總店)</option>
+                    <option value="燕巢區" <%= currentArea === '燕巢區' ? 'selected' : '' %>>燕巢區 (奢華分店)</option>
+                </select>
+            </form>
+        </div>
+
+        <% shops.forEach(shop => { %>
+            <div class="shop-card">
+                <div>
+                    <h3 style="margin: 0 0 10px 0; font-weight: bold; letter-spacing: 1px;"><%= shop.name %></h3>
+                    <p style="margin: 0; font-size: 0.85rem; color: #777;"><%= shop.address %></p>
+                </div>
+                <div style="display: flex; align-items: center; gap: 20px;">
+                    <span class="status-badge <%= shop.status === '人潮眾多' ? 'status-busy' : 'status-ok' %>"><%= shop.status %></span>
+                    <span style="font-size: 0.9rem; color: #444;">預計等待：<strong style="color:#C5A880;"><%= (shop.last_number - shop.current_number) * 5 %> 分鐘</strong></span>
+                    <a href="/queue?shopId=<%= shop.id %>" class="gold-link">線上取號</a>
+                </div>
+            </div>
+        <% }) %>
+    </div>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>智慧客製化面板 - SUGAR CODE</title>
+    <style>
+        body { background: #FFFFFF; font-family: 'Times New Roman', STHeiti, sans-serif; margin: 0; padding-top: 100px; text-align: center; }
+        .navbar { position: fixed; top: 0; left: 0; width: 100%; background: white; border-bottom: 1px solid #EAEAEA; display: flex; justify-content: space-between; align-items: center; padding: 15px 60px; box-sizing: border-box; z-index: 1000; }
+        .logo { font-size: 1.4rem; font-weight: bold; letter-spacing: 4px; color: #111; text-decoration: none; }
+        .nav-links a { color: #111; text-decoration: none; font-size: 0.9rem; letter-spacing: 2px; }
+        
+        .form-box { max-width: 600px; margin: 40px auto; border: 1px solid #EAEAEA; padding: 40px; background: #FFFFFF; text-align: left; }
+        .form-group { margin-bottom: 20px; }
+        label { font-size: 0.85rem; letter-spacing: 1px; color: #555; display: block; margin-bottom: 6px; font-weight: bold; }
+        select, input[type="text"] { width: 100%; padding: 12px; border: 1px solid #E0E0E0; background: #FAFAFA; font-size: 0.9rem; box-sizing: border-box; outline: none; }
+        .submit-btn { width: 100%; background: #111; color: white; padding: 14px; border: none; font-size: 1rem; font-weight: bold; letter-spacing: 2px; cursor: pointer; transition: 0.3s; }
+        .submit-btn:hover { background: #C5A880; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="/" class="logo">SUGAR <span>CODE</span></a>
+        <ul class="nav-links" style="display: flex; gap: 35px; list-style: none;">
+            <li><a href="/shop">精品商城</a></li>
+            <li><a href="/map">智慧地圖</a></li>
+            <li><a href="/queue">雲端取號</a></li>
+            <li><a href="/cart">我的購物車</a></li>
+            <li><a href="/login">會員中心</a></li>
+        </ul>
+    </nav>
+
+    <div class="form-box">
+        <h2 style="letter-spacing: 2px; font-weight: 300; margin-top: 0; color:#111; border-bottom: 1px solid #EAEAEA; padding-bottom: 15px;">⚙️ 智慧客製化微調面板</h2>
+        <form action="/cart/add-custom" method="POST">
+            <div class="form-group">
+                <label>1. 選擇要客製微調的甜點基底：</label>
+                <select name="dessertName" id="p-select" required>
+                    <% desserts.forEach(item => { %>
+                        <option value="<%= item.name %>" data-price="<%= item.price %>"><%= item.name %> ($<%= item.price %>)</option>
+                    <% }) %>
+                </select>
+            </div>
+            <input type="hidden" name="price" id="p-price" value="<%= desserts[0]? desserts[0].price : 0 %>">
+
+            <div class="form-group">
+                <label>2. 智慧糖分比例微調 (0% - 100%)：</label>
+                <select name="sugarLevel">
+                    <option value="正常經典配方 (100%)">正常經典配方 (100% 經典完美口感)</option>
+                    <option value="清爽少糖風味 (70%)">清爽少糖風味 (70% 減負擔)</option>
+                    <option value="優雅半糖工藝 (50%)">優雅半糖工藝 (50% 大眾推薦)</option>
+                    <option value="極致微糖輕盈 (30%)">極致微糖輕盈 (30% 職人最愛)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>3. 奢華節慶配件加購：</label>
+                <select name="candle">
+                    <option value="不需要額外配件">不需要額外配件</option>
+                    <option value="加購奢華香檳金造型節慶蠟燭(+$50)">加購高端法式香檳金造型節慶蠟燭 (+$50)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>4. 甜點表面專屬手工雕刻字內文 (10字內)：</label>
+                <input type="text" name="customText" placeholder="例：Happy Birthday / Only For You">
+            </div>
+
+            <button type="submit" class="submit-btn">⚙️ 儲存配置並加入購物車</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('p-select').addEventListener('change', function() {
+            document.getElementById('p-price').value = this.options[this.selectedIndex].getAttribute('data-price');
+        });
+    </script>
+</body>
+</html>
