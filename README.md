@@ -14,6 +14,7 @@
   📊 店端獨立智慧管理後台網址：http://localhost:3000/admin_portal
 
 網站操作流程影片介紹：https://youtu.be/eGjGq2sHMfk
+系統程式碼Github連結：https://github.com/xiaoxiao929/SugarCodeSystem
 
 專案運用技術介紹：
 一、 後端核心相依套件與中間件
