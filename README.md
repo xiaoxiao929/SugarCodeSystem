@@ -13,6 +13,8 @@
   🛒 消費者前端精品網站網址：http://localhost:3000
   📊 店端獨立智慧管理後台網址：http://localhost:3000/admin_portal
 
+網站操作流程影片介紹：https://youtu.be/eGjGq2sHMfk
+
 專案運用技術介紹：
 一、 後端核心相依套件與中間件
   本系統的後端核心依賴於 Node.js 生態系中高效、穩定的開源套件，透過 npm 進行套件管理與整合。主要運用套件如下：
