@@ -2,16 +2,17 @@
 
 專案操作流程：
 1. 請在您的電腦開啟終端機（Terminal）或 Command Prompt，切換至欲存放的資料夾路徑，並輸入指令下載專案原始碼：
-  git clone https://github.com/xiaoxiao929/SugarCodeSystem.git
-3. 下載完成後，請輸入指令切換進入專案資料夾：
+   git clone https://github.com/xiaoxiao929/SugarCodeSystem.git
+2. 下載完成後，請輸入指令切換進入專案資料夾：
   cd SugarCodeSystem
-4. 請輸入指令一鍵安裝核心依賴套件：
+3. 請輸入指令一鍵安裝核心依賴套件：
   npm install
-5. 請輸入指令啟動後端控制大腦：
+4. 請輸入指令啟動後端控制大腦：
   node app.js
-6. 在瀏覽器輸入網址進入網站
+5. 在瀏覽器輸入網址進入網站：
   🛒 消費者前端精品網站網址：http://localhost:3000
   📊 店端獨立智慧管理後台網址：http://localhost:3000/admin_portal
+
 
 網站操作流程影片介紹：https://youtu.be/eGjGq2sHMfk
 系統程式碼Github連結：https://github.com/xiaoxiao929/SugarCodeSystem
